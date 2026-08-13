@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.constant.MilvusConstants;
 import org.example.dto.DocumentChunk;
+import org.example.model.es.PolicyDoc;
+import org.example.dao.es.PolicyDocRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class VectorIndexService {
 
     @Autowired
     private DocumentChunkService chunkService;
+
+    @Autowired(required = false)
+    private PolicyDocRepository policyRepository;
 
     @Value("${file.upload.path}")
     private String uploadPath;
@@ -155,6 +160,15 @@ public class VectorIndexService {
 
                 // 插入到 Milvus
                 insertToMilvus(chunk.getContent(), vector, metadata, chunk.getChunkIndex());
+                if (policyRepository != null) {
+                    String policyId = UUID.nameUUIDFromBytes((metadata.get("_source") + "_" + chunk.getChunkIndex()).getBytes()).toString();
+                    PolicyDoc policyDoc = new PolicyDoc();
+                    policyDoc.setId(policyId);
+                    policyDoc.setContent(chunk.getContent());
+                    policyDoc.setSource((String) metadata.get("_source"));
+                    policyDoc.setChunkIndex(chunk.getChunkIndex());
+                    policyRepository.save(policyDoc);
+                }
                 
                 logger.info("✓ 分片 {}/{} 索引成功", i + 1, chunks.size());
 

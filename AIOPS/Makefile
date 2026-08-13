@@ -4,7 +4,7 @@
 # 配置变量
 SERVER_URL = http://localhost:9900
 UPLOAD_API = $(SERVER_URL)/api/upload
-DOCS_DIR = aiops-docs
+DOCS_DIR = after-sales-docs
 HEALTH_CHECK_API = $(SERVER_URL)/milvus/health
 DOCKER_COMPOSE_FILE = vector-database.yml
 MILVUS_CONTAINER = milvus-standalone

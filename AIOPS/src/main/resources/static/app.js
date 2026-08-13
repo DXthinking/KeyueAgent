@@ -1,4 +1,4 @@
-// SuperBizAgent 前端应用
+// AfterSalesAgent 前端应用
 class SuperBizAgentApp {
     constructor() {
         this.apiBaseUrl = 'http://localhost:9900/api';
@@ -128,7 +128,7 @@ class SuperBizAgentApp {
             this.newChatBtn.addEventListener('click', () => this.newChat());
         }
         
-        // AI Ops按钮
+        // 智能分诊按钮
         if (this.aiOpsSidebarBtn) {
             this.aiOpsSidebarBtn.addEventListener('click', () => this.triggerAIOps());
         }
@@ -540,7 +540,7 @@ class SuperBizAgentApp {
         // 更新输入框状态
         if (this.messageInput) {
             this.messageInput.disabled = this.isStreaming;
-            this.messageInput.placeholder = '问问智能OnCall助手';
+        this.messageInput.placeholder = '咨询订单、退款、退货或物流问题';
         }
     }
 
@@ -1175,7 +1175,7 @@ class SuperBizAgentApp {
                                                 this.updateAIOpsMessage(loadingMessageElement, fullResponse, []);
                                                 return true;
                                             } else if (sseMessage.type === 'error') {
-                                                throw new Error(sseMessage.data || '智能运维分析失败');
+                throw new Error(sseMessage.data || '售后智能分诊失败');
                                             }
                                         } catch (e) {
                                             if (e.message.includes('智能运维')) throw e;
@@ -1208,7 +1208,7 @@ class SuperBizAgentApp {
                                             this.updateAIOpsMessage(loadingMessageElement, fullResponse, []);
                                             return;
                                         } else if (sseMessage.type === 'error') {
-                                            throw new Error(sseMessage.data || '智能运维分析失败');
+                                            throw new Error(sseMessage.data || '售后智能分诊失败');
                                         }
                                     } else {
                                         fullResponse += rawData;
@@ -1483,7 +1483,7 @@ class SuperBizAgentApp {
                 // 更新文字为智能运维
                 const loadingText = this.loadingOverlay.querySelector('.loading-text');
                 const loadingSubtext = this.loadingOverlay.querySelector('.loading-subtext');
-                if (loadingText) loadingText.textContent = '智能运维分析中，请稍候...';
+                if (loadingText) loadingText.textContent = '售后智能分诊中，请稍候...';
                 if (loadingSubtext) loadingSubtext.textContent = '后端正在处理，请耐心等待';
                 // 防止页面滚动
                 document.body.style.overflow = 'hidden';
