@@ -1,11 +1,11 @@
-# SuperBizAgent Makefile
-# 用于自动化项目初始化和文档向量化
+# KeyueAgent Makefile
+# 一键启动 + 售后政策文档向量化索引
 
 # 配置变量
 SERVER_URL = http://localhost:9900
 UPLOAD_API = $(SERVER_URL)/api/upload
 DOCS_DIR = after-sales-docs
-HEALTH_CHECK_API = $(SERVER_URL)/milvus/health
+HEALTH_CHECK_API = $(SERVER_URL)/api/milvus/health
 DOCKER_COMPOSE_FILE = vector-database.yml
 MILVUS_CONTAINER = milvus-standalone
 
@@ -19,18 +19,18 @@ NC = \033[0m # No Color
 
 # 默认目标：显示帮助信息
 help:
-	@echo "$(GREEN)SuperBizAgent Makefile$(NC)"
+	@echo "$(GREEN)KeyueAgent 客悦电商售后智能客服 - Makefile$(NC)"
 	@echo ""
 	@echo "可用命令："
 	@echo "  $(YELLOW)make init$(NC)    - 🚀 一键初始化（启动Docker → 启动服务 → 上传文档）"
-	@echo "  $(YELLOW)make up$(NC)      - 启动 Docker Compose（Milvus 向量数据库）"
+	@echo "  $(YELLOW)make up$(NC)      - 启动 Docker Compose（MySQL+Redis+MQ+向量库）"
 	@echo "  $(YELLOW)make down$(NC)    - 停止 Docker Compose"
 	@echo "  $(YELLOW)make status$(NC)  - 查看 Docker 容器状态"
 	@echo "  $(YELLOW)make start$(NC)   - 启动 Spring Boot 服务（后台运行）"
 	@echo "  $(YELLOW)make stop$(NC)    - 停止 Spring Boot 服务"
 	@echo "  $(YELLOW)make restart$(NC) - 重启 Spring Boot 服务"
 	@echo "  $(YELLOW)make check$(NC)   - 检查服务器是否运行"
-	@echo "  $(YELLOW)make upload$(NC)  - 上传 aiops-docs 目录下的所有文档"
+	@echo "  $(YELLOW)make upload$(NC)  - 上传 after-sales-docs 目录下的所有售后政策文档"
 	@echo "  $(YELLOW)make clean$(NC)   - 清理临时文件"
 	@echo ""
 	@echo "使用示例："
@@ -40,9 +40,9 @@ help:
 
 # 一键初始化：启动Docker → 启动服务 → 检查服务 → 上传文档
 init:
-	@echo "$(GREEN)🚀 开始一键初始化 SuperBizAgent...$(NC)"
+	@echo "$(GREEN)🚀 开始一键初始化 KeyueAgent 客悦电商售后智能客服...$(NC)"
 	@echo ""
-	@echo "$(YELLOW)步骤 1/4: 启动 Docker Compose（Milvus 向量数据库）$(NC)"
+	@echo "$(YELLOW)步骤 1/4: 启动 Docker Compose（MySQL+Redis+RocketMQ+Milvus+ES）$(NC)"
 	@$(MAKE) up
 	@echo ""
 	@echo "$(YELLOW)步骤 2/4: 启动 Spring Boot 服务$(NC)"
@@ -51,16 +51,20 @@ init:
 	@echo "$(YELLOW)步骤 3/4: 等待服务就绪$(NC)"
 	@$(MAKE) wait
 	@echo ""
-	@echo "$(YELLOW)步骤 4/4: 上传 AIOps 文档到向量数据库$(NC)"
+	@echo "$(YELLOW)步骤 4/4: 上传售后政策文档到向量数据库$(NC)"
 	@$(MAKE) upload
 	@echo ""
 	@echo "$(GREEN)═══════════════════════════════════════════════════════$(NC)"
-	@echo "$(GREEN)✅ 初始化完成！所有文档已成功向量化存储到数据库$(NC)"
+	@echo "$(GREEN)✅ 初始化完成！所有售后政策文档已成功向量化存储$(NC)"
 	@echo "$(GREEN)═══════════════════════════════════════════════════════$(NC)"
 	@echo ""
 	@echo "$(GREEN)🌐 服务访问地址:$(NC)"
-	@echo "   API 服务: $(SERVER_URL)"
-	@echo "   Attu (Web UI): http://localhost:8000"
+	@echo "   API 服务:           $(SERVER_URL)"
+	@echo "   RocketMQ Dashboard: http://localhost:8180"
+	@echo "   Sentinel Dashboard: http://localhost:8858"
+	@echo "   SkyWalking UI:      http://localhost:8088"
+	@echo "   Milvus Attu:        http://localhost:8000"
+	@echo "   Elasticsearch:      http://localhost:9200"
 	@echo ""
 	@echo "$(YELLOW)💡 提示: 服务正在后台运行，查看日志: tail -f server.log$(NC)"
 
